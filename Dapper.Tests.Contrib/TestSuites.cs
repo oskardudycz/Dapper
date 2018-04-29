@@ -159,16 +159,16 @@ namespace Dapper.Tests.Contrib
                     connection.Execute("CREATE TABLE \"automobiles\" (\"Id\" SERIAL PRIMARY KEY, \"Name\" TEXT not null);");
                     dropTable("results");
                     connection.Execute("CREATE TABLE \"results\" (\"Id\" SERIAL PRIMARY KEY, \"Name\" TEXT not null, \"Order\" int not null);");
-                    dropTable("objectX");
-                    connection.Execute("CREATE TABLE \"objectX\" (\"ObjectXId\" TEXT not null, \"Name\" TEXT not null);");
-                    dropTable("objectY");
-                    connection.Execute("CREATE TABLE \"objectY\" (\"ObjectYId\" int not null, \"Name\" TEXT not null);");
-                    dropTable("objectZ");
-                    connection.Execute("CREATE TABLE \"objectZ\" (\"Id\" int not null, \"Name\" TEXT not null);");
-                    dropTable("genericType");
-                    connection.Execute("CREATE TABLE \"genericType\" (\"Id\" TEXT not null, \"Name\" TEXT not null);");
+                    dropTable("objectx");
+                    connection.Execute("CREATE TABLE \"objectx\" (\"ObjectXId\" TEXT not null, \"Name\" TEXT not null);");
+                    dropTable("objecty");
+                    connection.Execute("CREATE TABLE \"objecty\" (\"ObjectYId\" int not null, \"Name\" TEXT not null);");
+                    dropTable("objectz");
+                    connection.Execute("CREATE TABLE \"objectz\" (\"Id\" int not null, \"Name\" TEXT not null);");
+                    dropTable("generictype");
+                    connection.Execute("CREATE TABLE \"generictype\" (\"Id\" TEXT not null, \"Name\" TEXT not null);");
                     dropTable("nullableDates");
-                    connection.Execute("CREATE TABLE \"nullableDates\" (\"Id\" SERIAL PRIMARY KEY, \"DateValue\" DATE);");
+                    connection.Execute("CREATE TABLE \"nullabledates\" (\"Id\" SERIAL PRIMARY KEY, \"DateValue\" DATE);");
                 }
             }
             catch (NpgsqlException e)

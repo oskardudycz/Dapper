@@ -12,9 +12,9 @@ namespace Dapper.Contrib.Extensions
     public static partial class SqlMapperExtensions
     {
         /// <summary>
-        /// Returns a single entity by a single id from table "Ts" asynchronously using .NET 4.5 Task. T must be of interface type. 
+        /// Returns a single entity by a single id from table "Ts" asynchronously using .NET 4.5 Task. T must be of interface type.
         /// Id must be marked with [Key] attribute.
-        /// Created entity is tracked/intercepted for changes and used by the Update() extension. 
+        /// Created entity is tracked/intercepted for changes and used by the Update() extension.
         /// </summary>
         /// <typeparam name="T">Interface type to create and populate</typeparam>
         /// <param name="connection">Open SqlConnection</param>
@@ -68,10 +68,10 @@ namespace Dapper.Contrib.Extensions
         }
 
         /// <summary>
-        /// Returns a list of entites from table "Ts".  
+        /// Returns a list of entites from table "Ts".
         /// Id of T must be marked with [Key] attribute.
         /// Entities created from interfaces are tracked/intercepted for changes and used by the Update() extension
-        /// for optimal performance. 
+        /// for optimal performance.
         /// </summary>
         /// <typeparam name="T">Interface or type to create and populate</typeparam>
         /// <param name="connection">Open SqlConnection</param>
@@ -475,7 +475,7 @@ public partial class PostgresAdapter
                 if (!first)
                     sb.Append(", ");
                 first = false;
-                sb.Append(property.Name);
+                AppendColumnName(property.Name);
             }
         }
 
