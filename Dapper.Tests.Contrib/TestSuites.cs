@@ -137,7 +137,9 @@ namespace Dapper.Tests.Contrib
         public override IDbConnection GetConnection()
         {
             if (_skip) throw new SkipTestException("Skipping Postgres Tests - no server.");
-            return new NpgsqlConnection(ConnectionString);
+            var connection = new NpgsqlConnection(ConnectionString);
+            connection.Execute($"SET search_path TO \"{SchemaName}\";");
+            return connection;
         }
 
         private static readonly bool _skip;
