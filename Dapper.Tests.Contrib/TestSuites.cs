@@ -152,26 +152,26 @@ namespace Dapper.Tests.Contrib
                     Action<string> dropTable = name => connection.Execute($"DROP TABLE IF EXISTS \"{name}\";");
                     connection.Open();
                     connection.Execute($"DROP SCHEMA IF EXISTS \"{SchemaName}\"; CREATE SCHEMA \"{SchemaName}\"; SET search_path TO \"{SchemaName}\";");
-                    dropTable("Stuff");
-                    connection.Execute("CREATE TABLE \"Stuff\" (\"TheId\" SERIAL PRIMARY KEY, \"Name\" TEXT not null, \"Created\" DATE null);");
-                    dropTable("People");
-                    connection.Execute("CREATE TABLE \"People\" (\"Id\" SERIAL PRIMARY KEY, \"Name\" TEXT not null);");
-                    dropTable("Users");
-                    connection.Execute("CREATE TABLE \"Users\" (\"Id\" SERIAL PRIMARY KEY, \"Name\" TEXT not null, \"Age\" int not null);");
-                    dropTable("Automobiles");
-                    connection.Execute("CREATE TABLE \"Automobiles\" (\"Id\" SERIAL PRIMARY KEY, \"Name\" TEXT not null);");
-                    dropTable("Results");
-                    connection.Execute("CREATE TABLE \"Results\" (\"Id\" SERIAL PRIMARY KEY, \"Name\" TEXT not null, \"Order\" int not null);");
-                    dropTable("ObjectX");
-                    connection.Execute("CREATE TABLE \"ObjectX\" (\"ObjectXId\" TEXT not null, \"Name\" TEXT not null);");
-                    dropTable("ObjectY");
-                    connection.Execute("CREATE TABLE \"ObjectY\" (\"ObjectYId\" int not null, \"Name\" TEXT not null);");
-                    dropTable("ObjectZ");
-                    connection.Execute("CREATE TABLE \"ObjectZ\" (\"Id\" int not null, \"Name\" TEXT not null);");
-                    dropTable("GenericType");
-                    connection.Execute("CREATE TABLE \"GenericType\" (\"Id\" TEXT not null, \"Name\" TEXT not null);");
-                    dropTable("NullableDates");
-                    connection.Execute("CREATE TABLE \"NullableDates\" (\"Id\" SERIAL PRIMARY KEY, \"DateValue\" DATE);");
+                    dropTable("stuff");
+                    connection.Execute("CREATE TABLE \"stuff\" (\"TheId\" SERIAL PRIMARY KEY, \"Name\" TEXT not null, \"Created\" DATE null);");
+                    dropTable("people");
+                    connection.Execute("CREATE TABLE \"people\" (\"Id\" SERIAL PRIMARY KEY, \"Name\" TEXT not null);");
+                    dropTable("users");
+                    connection.Execute("CREATE TABLE \"users\" (\"Id\" SERIAL PRIMARY KEY, \"Name\" TEXT not null, \"Age\" int not null);");
+                    dropTable("automobiles");
+                    connection.Execute("CREATE TABLE \"automobiles\" (\"Id\" SERIAL PRIMARY KEY, \"Name\" TEXT not null);");
+                    dropTable("results");
+                    connection.Execute("CREATE TABLE \"results\" (\"Id\" SERIAL PRIMARY KEY, \"Name\" TEXT not null, \"Order\" int not null);");
+                    dropTable("objectX");
+                    connection.Execute("CREATE TABLE \"objectX\" (\"ObjectXId\" TEXT not null, \"Name\" TEXT not null);");
+                    dropTable("objectY");
+                    connection.Execute("CREATE TABLE \"objectY\" (\"ObjectYId\" int not null, \"Name\" TEXT not null);");
+                    dropTable("objectZ");
+                    connection.Execute("CREATE TABLE \"objectZ\" (\"Id\" int not null, \"Name\" TEXT not null);");
+                    dropTable("genericType");
+                    connection.Execute("CREATE TABLE \"genericType\" (\"Id\" TEXT not null, \"Name\" TEXT not null);");
+                    dropTable("nullableDates");
+                    connection.Execute("CREATE TABLE \"nullableDates\" (\"Id\" SERIAL PRIMARY KEY, \"DateValue\" DATE);");
                 }
             }
             catch (NpgsqlException e)
