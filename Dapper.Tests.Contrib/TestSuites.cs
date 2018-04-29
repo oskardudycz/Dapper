@@ -127,8 +127,6 @@ namespace Dapper.Tests.Contrib
 
     public class PostgresTestSuite : TestSuite
     {
-        private const string SchemaName = "DapperContribTests";
-
         public static string ConnectionString { get; } =
             IsAppVeyor
                 ? "HOST=localhost;database=postgres;Uid=postgres;Pwd=Password12!;"
@@ -137,9 +135,7 @@ namespace Dapper.Tests.Contrib
         public override IDbConnection GetConnection()
         {
             if (_skip) throw new SkipTestException("Skipping Postgres Tests - no server.");
-            var connection = new NpgsqlConnection(ConnectionString);
-            connection.Execute($"SET search_path TO \"{SchemaName}\";");
-            return connection;
+            return new NpgsqlConnection(ConnectionString);
         }
 
         private static readonly bool _skip;
@@ -153,7 +149,6 @@ namespace Dapper.Tests.Contrib
                     // ReSharper disable once AccessToDisposedClosure
                     Action<string> dropTable = name => connection.Execute($"DROP TABLE IF EXISTS \"{name}\";");
                     connection.Open();
-                    connection.Execute($"DROP SCHEMA IF EXISTS \"{SchemaName}\"; CREATE SCHEMA \"{SchemaName}\"; SET search_path TO \"{SchemaName}\";");
                     dropTable("stuff");
                     connection.Execute("CREATE TABLE \"stuff\" (\"TheId\" SERIAL PRIMARY KEY, \"Name\" TEXT not null, \"Created\" DATE null);");
                     dropTable("people");
