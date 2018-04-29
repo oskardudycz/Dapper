@@ -30,6 +30,8 @@ namespace Dapper.Contrib.Extensions
                 var key = GetSingleKey<T>(nameof(GetAsync));
                 var name = GetTableName(type);
 
+                var adapter = GetFormatter(connection);
+
                 var sb = new StringBuilder();
                 sb.AppendFormat("select * from {0} where ", name);
                 adapter.AppendColumnName(sb, key.Name);
