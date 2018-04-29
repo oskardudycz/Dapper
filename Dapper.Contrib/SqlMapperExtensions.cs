@@ -185,8 +185,13 @@ namespace Dapper.Contrib.Extensions
                 var key = GetSingleKey<T>(nameof(Get));
                 var name = GetTableName(type);
 
-                sql = $"select * from {name} where {key.Name} = @id";
-                GetQueries[type.TypeHandle] = sql;
+                var adapter = GetFormatter(connection);
+
+                var sb = new StringBuilder();
+                sb.AppendFormat("select * from {0} where ", name);
+                adapter.AppendColumnName(sb, key.Name);
+                sb.Append(" = @id");
+                GetQueries[type.TypeHandle] = sb.ToString();
             }
 
             var dynParms = new DynamicParameters();
