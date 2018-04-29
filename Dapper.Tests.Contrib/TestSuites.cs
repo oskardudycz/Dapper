@@ -127,12 +127,12 @@ namespace Dapper.Tests.Contrib
 
     public class PostgresTestSuite : TestSuite
     {
-        private const string DbName = "DapperContribTests";
+        private const string SchemaName = "DapperContribTests";
 
         public static string ConnectionString { get; } =
             IsAppVeyor
-                ? "HOST=localhost;Uid=postgres;Pwd=Password12!;"
-                : "HOST=localhost;Uid=postgres;Pwd=Password12!;";
+                ? "HOST=localhost;database=postgres;Uid=postgres;Pwd=Password12!;"
+                : "HOST=localhost;database=postgres;Uid=postgres;Pwd=Password12!;";
 
         public override IDbConnection GetConnection()
         {
@@ -151,7 +151,7 @@ namespace Dapper.Tests.Contrib
                     // ReSharper disable once AccessToDisposedClosure
                     Action<string> dropTable = name => connection.Execute($"DROP TABLE IF EXISTS \"{name}\";");
                     connection.Open();
-                    connection.Execute($"DROP DATABASE IF EXISTS \"{DbName}\"; CREATE DATABASE \"{DbName}\"; SET search_path TO \"{DbName}\";");
+                    connection.Execute($"DROP SCHEMA IF EXISTS \"{SchemaName}\"; CREATE SCHEMA \"{SchemaName}\"; SET search_path TO \"{SchemaName}\";");
                     dropTable("Stuff");
                     connection.Execute("CREATE TABLE \"Stuff\" (\"TheId\" SERIAL PRIMARY KEY, \"Name\" TEXT not null, \"Created\" DATE null);");
                     dropTable("People");
