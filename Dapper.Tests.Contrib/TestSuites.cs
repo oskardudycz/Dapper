@@ -151,7 +151,7 @@ namespace Dapper.Tests.Contrib
                     // ReSharper disable once AccessToDisposedClosure
                     Action<string> dropTable = name => connection.Execute($"DROP TABLE IF EXISTS \"{name}\";");
                     connection.Open();
-                    connection.Execute($"DROP DATABASE IF EXISTS \"{DbName}\"; CREATE DATABASE \"{DbName}\"; USE \"{DbName}\";");
+                    connection.Execute($"DROP DATABASE IF EXISTS \"{DbName}\"; CREATE DATABASE \"{DbName}\"; SET search_path TO \"{DbName}\";");
                     dropTable("Stuff");
                     connection.Execute("CREATE TABLE \"Stuff\" (\"TheId\" SERIAL PRIMARY KEY, \"Name\" TEXT not null, \"Created\" DATE null);");
                     dropTable("People");
