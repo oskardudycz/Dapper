@@ -1,9 +1,10 @@
-﻿using Microsoft.Data.Sqlite;
-using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using Microsoft.Data.Sqlite;
+using MySql.Data.MySqlClient;
+using Npgsql;
 using Xunit;
 using Xunit.Sdk;
 
@@ -26,10 +27,12 @@ namespace Dapper.Tests.Contrib
     public class SqlServerTestSuite : TestSuite
     {
         private const string DbName = "tempdb";
+
         public static string ConnectionString =>
             IsAppVeyor
                 ? @"Server=(local)\SQL2016;Database=tempdb;User ID=sa;Password=Password12!"
                 : $"Data Source=.;Initial Catalog={DbName};Integrated Security=True";
+
         public override IDbConnection GetConnection() => new SqlConnection(ConnectionString);
 
         static SqlServerTestSuite()
@@ -122,10 +125,70 @@ namespace Dapper.Tests.Contrib
         }
     }
 
+    public class PostgresTestSuite : TestSuite
+    {
+        private const string DbName = "DapperContribTests";
+
+        public static string ConnectionString { get; } =
+            IsAppVeyor
+                ? "HOST=localhost;Uid=postgres;Pwd=Password12!;"
+                : "HOST=localhost;Uid=postgres;Pwd=Password12!;";
+
+        public override IDbConnection GetConnection()
+        {
+            if (_skip) throw new SkipTestException("Skipping Postgres Tests - no server.");
+            return new NpgsqlConnection(ConnectionString);
+        }
+
+        private static readonly bool _skip;
+
+        static PostgresTestSuite()
+        {
+            try
+            {
+                using (var connection = new NpgsqlConnection(ConnectionString))
+                {
+                    // ReSharper disable once AccessToDisposedClosure
+                    Action<string> dropTable = name => connection.Execute($"DROP TABLE IF EXISTS \"{name}\";");
+                    connection.Open();
+                    connection.Execute($"DROP DATABASE IF EXISTS \"{DbName}\"; CREATE DATABASE \"{DbName}\"; USE \"{DbName}\";");
+                    dropTable("Stuff");
+                    connection.Execute("CREATE TABLE \"Stuff\" (\"TheId\" SERIAL PRIMARY KEY, \"Name\" TEXT not null, \"Created\" DATE null);");
+                    dropTable("People");
+                    connection.Execute("CREATE TABLE \"People\" (\"Id\" SERIAL PRIMARY KEY, \"Name\" TEXT not null);");
+                    dropTable("Users");
+                    connection.Execute("CREATE TABLE \"Users\" (\"Id\" SERIAL PRIMARY KEY, \"Name\" TEXT not null, \"Age\" int not null);");
+                    dropTable("Automobiles");
+                    connection.Execute("CREATE TABLE \"Automobiles\" (\"Id\" SERIAL PRIMARY KEY, \"Name\" TEXT not null);");
+                    dropTable("Results");
+                    connection.Execute("CREATE TABLE \"Results\" (\"Id\" SERIAL PRIMARY KEY, \"Name\" TEXT not null, \"Order\" int not null);");
+                    dropTable("ObjectX");
+                    connection.Execute("CREATE TABLE \"ObjectX\" (\"ObjectXId\" TEXT not null, \"Name\" TEXT not null);");
+                    dropTable("ObjectY");
+                    connection.Execute("CREATE TABLE \"\" (\"ObjectYId\" int not null, \"Name\" TEXT not null);");
+                    dropTable("ObjectZ");
+                    connection.Execute("CREATE TABLE \"ObjectZ\" (\"Id\" int not null, \"Name\" TEXT not null);");
+                    dropTable("GenericType");
+                    connection.Execute("CREATE TABLE \"GenericType\" (\"Id\" TEXT not null, \"Name\" TEXT not null);");
+                    dropTable("NullableDates");
+                    connection.Execute("CREATE TABLE \"NullableDates\" (\"Id\" SERIAL PRIMARY KEY, \"DateValue\" DATE);");
+                }
+            }
+            catch (NpgsqlException e)
+            {
+                if (e.Message.Contains("No connection could be made"))
+                    _skip = true;
+                else
+                    throw;
+            }
+        }
+    }
+
     public class SQLiteTestSuite : TestSuite
     {
         private const string FileName = "Test.DB.sqlite";
         public static string ConnectionString => $"Filename=./{FileName};Mode=ReadWriteCreate;";
+
         public override IDbConnection GetConnection() => new SqliteConnection(ConnectionString);
 
         static SQLiteTestSuite()
@@ -157,7 +220,7 @@ namespace Dapper.Tests.Contrib
         const string FileName = "Test.DB.sdf";
         public static string ConnectionString => $"Data Source={FileName};";
         public override IDbConnection GetConnection() => new SqlCeConnection(ConnectionString);
-            
+
         static SqlCETestSuite()
         {
             if (File.Exists(FileName))
