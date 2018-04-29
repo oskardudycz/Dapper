@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Dapper.Contrib.Extensions;
-using FactAttribute = Dapper.Tests.Contrib.SkippableFactAttribute;
 using Xunit;
+using FactAttribute = Dapper.Tests.Contrib.SkippableFactAttribute;
 
 namespace Dapper.Tests.Contrib
 {
@@ -47,7 +46,7 @@ namespace Dapper.Tests.Contrib
         }
 
         /// <summary>
-        /// Tests for issue #351 
+        /// Tests for issue #351
         /// </summary>
         [Fact]
         public async Task InsertGetUpdateDeleteWithExplicitKeyAsync()
@@ -191,7 +190,7 @@ namespace Dapper.Tests.Contrib
                 var justId = builder.AddTemplate("SELECT /**select**/ FROM Users");
                 var all = builder.AddTemplate("SELECT Name, /**select**/, Age FROM Users");
 
-                builder.Select("Id");
+                builder.Select(GetColumnName("Id"));
 
                 var ids = await connection.QueryAsync<int>(justId.RawSql, justId.Parameters).ConfigureAwait(false);
                 var users = await connection.QueryAsync<User>(all.RawSql, all.Parameters).ConfigureAwait(false);

@@ -64,6 +64,11 @@ namespace Dapper.Tests.Contrib
                 connection.Execute("CREATE TABLE NullableDates (Id int IDENTITY(1,1) not null, DateValue DateTime null);");
             }
         }
+
+        protected override string GetColumnName(string columnName)
+        {
+            return string.Format("[{0}]", columnName);
+        }
     }
 
     public class MySqlServerTestSuite : TestSuite
@@ -123,6 +128,11 @@ namespace Dapper.Tests.Contrib
                     throw;
             }
         }
+
+        protected override string GetColumnName(string columnName)
+        {
+            return string.Format("`{0}`", columnName);
+        }
     }
 
     public class PostgresTestSuite : TestSuite
@@ -179,6 +189,11 @@ namespace Dapper.Tests.Contrib
                     throw;
             }
         }
+
+        protected override string GetColumnName(string columnName)
+        {
+            return string.Format("\"{0}\"", columnName);
+        }
     }
 
     public class SQLiteTestSuite : TestSuite
@@ -208,6 +223,11 @@ namespace Dapper.Tests.Contrib
                 connection.Execute("CREATE TABLE GenericType (Id nvarchar(100) not null, Name nvarchar(100) not null) ");
                 connection.Execute("CREATE TABLE NullableDates (Id integer primary key autoincrement not null, DateValue DateTime) ");
             }
+        }
+
+        protected override string GetColumnName(string columnName)
+        {
+            return string.Format("\"{0}\"", columnName);
         }
     }
 
@@ -241,6 +261,11 @@ namespace Dapper.Tests.Contrib
                 connection.Execute(@"CREATE TABLE NullableDates (Id int IDENTITY(1,1) not null, DateValue DateTime null) ");
             }
             Console.WriteLine("Created database");
+        }
+
+        protected override string GetColumnName(string columnName)
+        {
+            return string.Format("[{0}]", columnName);
         }
     }
 #endif

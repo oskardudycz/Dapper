@@ -10,6 +10,7 @@ using Xunit;
 using System.Transactions;
 using System.Data.SqlServerCe;
 #endif
+
 using FactAttribute = Dapper.Tests.Contrib.SkippableFactAttribute;
 
 namespace Dapper.Tests.Contrib
@@ -19,6 +20,7 @@ namespace Dapper.Tests.Contrib
     {
         [ExplicitKey]
         public string ObjectXId { get; set; }
+
         public string Name { get; set; }
     }
 
@@ -27,6 +29,7 @@ namespace Dapper.Tests.Contrib
     {
         [ExplicitKey]
         public int ObjectYId { get; set; }
+
         public string Name { get; set; }
     }
 
@@ -35,6 +38,7 @@ namespace Dapper.Tests.Contrib
     {
         [ExplicitKey]
         public int Id { get; set; }
+
         public string Name { get; set; }
     }
 
@@ -42,6 +46,7 @@ namespace Dapper.Tests.Contrib
     {
         [Key]
         int Id { get; set; }
+
         string Name { get; set; }
         int Age { get; set; }
     }
@@ -57,6 +62,7 @@ namespace Dapper.Tests.Contrib
     {
         [Key]
         int Id { get; set; }
+
         DateTime? DateValue { get; set; }
     }
 
@@ -77,6 +83,7 @@ namespace Dapper.Tests.Contrib
     {
         [Key]
         public short TheId { get; set; }
+
         public string Name { get; set; }
         public DateTime? Created { get; set; }
     }
@@ -86,6 +93,7 @@ namespace Dapper.Tests.Contrib
     {
         public int Id { get; set; }
         public string Name { get; set; }
+
         [Computed]
         public string Computed { get; set; }
     }
@@ -103,6 +111,7 @@ namespace Dapper.Tests.Contrib
     {
         [ExplicitKey]
         public string Id { get; set; }
+
         public string Name { get; set; }
     }
 
@@ -118,6 +127,8 @@ namespace Dapper.Tests.Contrib
             connection.Open();
             return connection;
         }
+
+        protected abstract string GetColumnName(string columnName);
 
         [Fact]
         public void TypeWithGenericParameterCanBeInserted()
@@ -184,7 +195,7 @@ namespace Dapper.Tests.Contrib
         }
 
         /// <summary>
-        /// Tests for issue #351 
+        /// Tests for issue #351
         /// </summary>
         [Fact]
         public void InsertGetUpdateDeleteWithExplicitKey()
@@ -518,6 +529,7 @@ namespace Dapper.Tests.Contrib
                 {
                     case "Person":
                         return "People";
+
                     default:
                         var tableattr = type.GetCustomAttributes(false).SingleOrDefault(attr => attr.GetType().Name == "TableAttribute") as dynamic;
                         if (tableattr != null)
@@ -652,7 +664,7 @@ namespace Dapper.Tests.Contrib
                 var justId = builder.AddTemplate("SELECT /**select**/ FROM Users");
                 var all = builder.AddTemplate("SELECT Name, /**select**/, Age FROM Users");
 
-                builder.Select("Id");
+                builder.Select(GetColumnName("Id"));
 
                 var ids = connection.Query<int>(justId.RawSql, justId.Parameters);
                 var users = connection.Query<User>(all.RawSql, all.Parameters);
