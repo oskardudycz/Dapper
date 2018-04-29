@@ -165,7 +165,7 @@ namespace Dapper.Tests.Contrib
                     dropTable("ObjectX");
                     connection.Execute("CREATE TABLE \"ObjectX\" (\"ObjectXId\" TEXT not null, \"Name\" TEXT not null);");
                     dropTable("ObjectY");
-                    connection.Execute("CREATE TABLE \"\" (\"ObjectYId\" int not null, \"Name\" TEXT not null);");
+                    connection.Execute("CREATE TABLE \"ObjectY\" (\"ObjectYId\" int not null, \"Name\" TEXT not null);");
                     dropTable("ObjectZ");
                     connection.Execute("CREATE TABLE \"ObjectZ\" (\"Id\" int not null, \"Name\" TEXT not null);");
                     dropTable("GenericType");
