@@ -475,7 +475,7 @@ public partial class PostgresAdapter
                 if (!first)
                     sb.Append(", ");
                 first = false;
-                AppendColumnName(property.Name);
+                AppendColumnName(sb, property.Name);
             }
         }
 
