@@ -164,7 +164,7 @@ namespace Dapper.Tests.Contrib
                     dropTable("people");
                     connection.Execute("CREATE TABLE \"people\" (\"Id\" SERIAL PRIMARY KEY, Name TEXT not null);");
                     dropTable("users");
-                    connection.Execute("CREATE TABLE \"users\" (\"Id\" SERIAL PRIMARY KEY, \"Name\" TEXT not null, Age int not null);");
+                    connection.Execute("CREATE TABLE \"users\" (\"Id\" SERIAL PRIMARY KEY, \"Name\" TEXT not null, \"Age\" int not null);");
                     dropTable("automobiles");
                     connection.Execute("CREATE TABLE \"automobiles\" (\"Id\" SERIAL PRIMARY KEY, Name TEXT not null);");
                     dropTable("results");
