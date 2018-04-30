@@ -168,7 +168,7 @@ namespace Dapper.Tests.Contrib
                     dropTable("automobiles");
                     connection.Execute("CREATE TABLE \"automobiles\" (\"Id\" SERIAL PRIMARY KEY, Name TEXT not null);");
                     dropTable("results");
-                    connection.Execute("CREATE TABLE \"results\" (\"Id\" SERIAL PRIMARY KEY, Name TEXT not null, Order int not null);");
+                    connection.Execute("CREATE TABLE \"results\" (\"Id\" SERIAL PRIMARY KEY, Name TEXT not null, \"Order\" int not null);");
                     dropTable("objectx");
                     connection.Execute("CREATE TABLE \"objectx\" (\"ObjectXId\" TEXT not null, Name TEXT not null);");
                     dropTable("objecty");
