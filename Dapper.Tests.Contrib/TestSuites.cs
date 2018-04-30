@@ -178,7 +178,7 @@ namespace Dapper.Tests.Contrib
                     dropTable("generictype");
                     connection.Execute("CREATE TABLE \"generictype\" (\"Id\" TEXT not null, \"Name\" TEXT not null);");
                     dropTable("nullabledates");
-                    connection.Execute("CREATE TABLE \"nullabledates\" (\"Id\" SERIAL PRIMARY KEY, DateValue DATE);");
+                    connection.Execute("CREATE TABLE \"nullabledates\" (\"Id\" SERIAL PRIMARY KEY, \"DateValue\" DATE);");
                 }
             }
             catch (NpgsqlException e)
