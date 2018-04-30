@@ -36,7 +36,8 @@ namespace Dapper.Contrib.Extensions
                 sb.AppendFormat("select * from {0} where ", name);
                 adapter.AppendColumnName(sb, key.Name);
                 sb.Append(" = @id");
-                GetQueries[type.TypeHandle] = sb.ToString();
+                sql = sb.ToString();
+                GetQueries[type.TypeHandle] = sql;
             }
 
             var dynParms = new DynamicParameters();
