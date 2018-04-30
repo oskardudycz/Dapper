@@ -177,7 +177,7 @@ namespace Dapper.Tests.Contrib
                     connection.Execute("CREATE TABLE \"objectz\" (\"Id\" int not null, \"Name\" TEXT not null);");
                     dropTable("generictype");
                     connection.Execute("CREATE TABLE \"generictype\" (\"Id\" TEXT not null, \"Name\" TEXT not null);");
-                    dropTable("nullableDates");
+                    dropTable("nullabledates");
                     connection.Execute("CREATE TABLE \"nullabledates\" (\"Id\" SERIAL PRIMARY KEY, \"DateValue\" DATE);");
                 }
             }
