@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -34,6 +35,7 @@ namespace Dapper
         {
             public int Compare(PropertyInfo x, PropertyInfo y) => string.CompareOrdinal(x.Name, y.Name);
         }
+
         private static int GetColumnHash(IDataReader reader, int startBound = 0, int length = -1)
         {
             unchecked
@@ -53,6 +55,7 @@ namespace Dapper
         /// Called if the query cache is purged via PurgeQueryCache
         /// </summary>
         public static event EventHandler QueryCachePurged;
+
         private static void OnQueryCachePurged()
         {
             var handler = QueryCachePurged;
@@ -60,6 +63,7 @@ namespace Dapper
         }
 
         private static readonly System.Collections.Concurrent.ConcurrentDictionary<Identity, CacheInfo> _queryCache = new System.Collections.Concurrent.ConcurrentDictionary<Identity, CacheInfo>();
+
         private static void SetQueryCache(Identity key, CacheInfo value)
         {
             if (Interlocked.Increment(ref collect) == COLLECT_PER_ITEMS)
@@ -81,7 +85,6 @@ namespace Dapper
                     }
                 }
             }
-
             finally
             {
                 Interlocked.Exchange(ref collect, 0);
@@ -90,6 +93,7 @@ namespace Dapper
 
         private const int COLLECT_PER_ITEMS = 1000, COLLECT_HIT_COUNT_MIN = 0;
         private static int collect;
+
         private static bool TryGetQueryCache(Identity key, out CacheInfo value)
         {
             if (_queryCache.TryGetValue(key, out value))
@@ -405,9 +409,11 @@ namespace Dapper
                 case "Microsoft.SqlServer.Types.SqlGeography":
                     AddTypeHandler(type, handler = new UdtTypeHandler("geography"));
                     return DbType.Object;
+
                 case "Microsoft.SqlServer.Types.SqlGeometry":
                     AddTypeHandler(type, handler = new UdtTypeHandler("geometry"));
                     return DbType.Object;
+
                 case "Microsoft.SqlServer.Types.SqlHierarchyId":
                     AddTypeHandler(type, handler = new UdtTypeHandler("hierarchyid"));
                     return DbType.Object;
@@ -1067,6 +1073,9 @@ namespace Dapper
         {
             object param = command.Parameters;
             var identity = new Identity(command.CommandText, command.CommandType, cnn, effectiveType, param?.GetType(), null);
+            Debug.WriteLine("cooommand text: " + command.CommandText);
+            Console.WriteLine("cooommand text: " + command.CommandText);
+
             var info = GetCacheInfo(identity, param, command.AddToCache);
 
             IDbCommand cmd = null;
@@ -1076,6 +1085,8 @@ namespace Dapper
             try
             {
                 cmd = command.SetupCommand(cnn, info.ParamReader);
+                Debug.WriteLine("2cooommand text: " + cmd.CommandText);
+                Console.WriteLine("2cooommand text: " + cmd.CommandText);
 
                 if (wasClosed) cnn.Open();
                 reader = ExecuteReaderWithFlagsFallback(cmd, wasClosed, CommandBehavior.SequentialAccess | CommandBehavior.SingleResult);
@@ -1141,6 +1152,7 @@ namespace Dapper
         }
 
         private static readonly int[] ErrTwoRows = new int[2], ErrZeroRows = new int[0];
+
         private static void ThrowMultipleRows(Row row)
         {
             switch (row)
@@ -1239,7 +1251,7 @@ namespace Dapper
         }
 
         /// <summary>
-        /// Perform a multi-mapping query with 2 input types. 
+        /// Perform a multi-mapping query with 2 input types.
         /// This returns a single type, combined from the raw types via <paramref name="map"/>.
         /// </summary>
         /// <typeparam name="TFirst">The first type in the recordset.</typeparam>
@@ -1259,7 +1271,7 @@ namespace Dapper
             MultiMap<TFirst, TSecond, DontMap, DontMap, DontMap, DontMap, DontMap, TReturn>(cnn, sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType);
 
         /// <summary>
-        /// Perform a multi-mapping query with 3 input types. 
+        /// Perform a multi-mapping query with 3 input types.
         /// This returns a single type, combined from the raw types via <paramref name="map"/>.
         /// </summary>
         /// <typeparam name="TFirst">The first type in the recordset.</typeparam>
@@ -1280,7 +1292,7 @@ namespace Dapper
             MultiMap<TFirst, TSecond, TThird, DontMap, DontMap, DontMap, DontMap, TReturn>(cnn, sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType);
 
         /// <summary>
-        /// Perform a multi-mapping query with 4 input types. 
+        /// Perform a multi-mapping query with 4 input types.
         /// This returns a single type, combined from the raw types via <paramref name="map"/>.
         /// </summary>
         /// <typeparam name="TFirst">The first type in the recordset.</typeparam>
@@ -1302,7 +1314,7 @@ namespace Dapper
             MultiMap<TFirst, TSecond, TThird, TFourth, DontMap, DontMap, DontMap, TReturn>(cnn, sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType);
 
         /// <summary>
-        /// Perform a multi-mapping query with 5 input types. 
+        /// Perform a multi-mapping query with 5 input types.
         /// This returns a single type, combined from the raw types via <paramref name="map"/>.
         /// </summary>
         /// <typeparam name="TFirst">The first type in the recordset.</typeparam>
@@ -1325,7 +1337,7 @@ namespace Dapper
             MultiMap<TFirst, TSecond, TThird, TFourth, TFifth, DontMap, DontMap, TReturn>(cnn, sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType);
 
         /// <summary>
-        /// Perform a multi-mapping query with 6 input types. 
+        /// Perform a multi-mapping query with 6 input types.
         /// This returns a single type, combined from the raw types via <paramref name="map"/>.
         /// </summary>
         /// <typeparam name="TFirst">The first type in the recordset.</typeparam>
@@ -1349,7 +1361,7 @@ namespace Dapper
             MultiMap<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, DontMap, TReturn>(cnn, sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType);
 
         /// <summary>
-        /// Perform a multi-mapping query with 7 input types. 
+        /// Perform a multi-mapping query with 7 input types.
         /// This returns a single type, combined from the raw types via <paramref name="map"/>.
         /// </summary>
         /// <typeparam name="TFirst">The first type in the recordset.</typeparam>
@@ -1374,7 +1386,7 @@ namespace Dapper
             MultiMap<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TSeventh, TReturn>(cnn, sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType);
 
         /// <summary>
-        /// Perform a multi-mapping query with an arbitrary number of input types. 
+        /// Perform a multi-mapping query with an arbitrary number of input types.
         /// This returns a single type, combined from the raw types via <paramref name="map"/>.
         /// </summary>
         /// <typeparam name="TReturn">The combined type to return.</typeparam>
@@ -1540,16 +1552,22 @@ namespace Dapper
             {
                 case 1:
                     return r => ((Func<TFirst, TSecond, TReturn>)map)((TFirst)deserializer(r), (TSecond)otherDeserializers[0](r));
+
                 case 2:
                     return r => ((Func<TFirst, TSecond, TThird, TReturn>)map)((TFirst)deserializer(r), (TSecond)otherDeserializers[0](r), (TThird)otherDeserializers[1](r));
+
                 case 3:
                     return r => ((Func<TFirst, TSecond, TThird, TFourth, TReturn>)map)((TFirst)deserializer(r), (TSecond)otherDeserializers[0](r), (TThird)otherDeserializers[1](r), (TFourth)otherDeserializers[2](r));
+
                 case 4:
                     return r => ((Func<TFirst, TSecond, TThird, TFourth, TFifth, TReturn>)map)((TFirst)deserializer(r), (TSecond)otherDeserializers[0](r), (TThird)otherDeserializers[1](r), (TFourth)otherDeserializers[2](r), (TFifth)otherDeserializers[3](r));
+
                 case 5:
                     return r => ((Func<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TReturn>)map)((TFirst)deserializer(r), (TSecond)otherDeserializers[0](r), (TThird)otherDeserializers[1](r), (TFourth)otherDeserializers[2](r), (TFifth)otherDeserializers[3](r), (TSixth)otherDeserializers[4](r));
+
                 case 6:
                     return r => ((Func<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TSeventh, TReturn>)map)((TFirst)deserializer(r), (TSecond)otherDeserializers[0](r), (TThird)otherDeserializers[1](r), (TFourth)otherDeserializers[2](r), (TFifth)otherDeserializers[3](r), (TSixth)otherDeserializers[4](r), (TSeventh)otherDeserializers[5](r));
+
                 default:
                     throw new NotSupportedException();
             }
@@ -1864,11 +1882,13 @@ namespace Dapper
                     return new DapperRow(table, values);
                 };
         }
+
         /// <summary>
         /// Internal use only.
         /// </summary>
         /// <param name="value">The object to convert to a character.</param>
 #if !NETSTANDARD1_3
+
         [Browsable(false)]
 #endif
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -1886,6 +1906,7 @@ namespace Dapper
         /// </summary>
         /// <param name="value">The object to convert to a character.</param>
 #if !NETSTANDARD1_3
+
         [Browsable(false)]
 #endif
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -1905,6 +1926,7 @@ namespace Dapper
         /// <param name="command">The command for this fetch.</param>
         /// <param name="name">The name of the parameter to get.</param>
 #if !NETSTANDARD1_3
+
         [Browsable(false)]
 #endif
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -1963,6 +1985,7 @@ namespace Dapper
         /// <param name="namePrefix">The name prefix for these parameters.</param>
         /// <param name="value">The parameter value can be an <see cref="IEnumerable{T}"/></param>
 #if !NETSTANDARD1_3
+
         [Browsable(false)]
 #endif
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -2122,10 +2145,13 @@ namespace Dapper
             {
                 case IEnumerable<int> l:
                     return TryStringSplit(ref l, splitAt, namePrefix, command, "int", byPosition, (sb, i) => sb.Append(i.ToString(CultureInfo.InvariantCulture)));
+
                 case IEnumerable<long> l:
                     return TryStringSplit(ref l, splitAt, namePrefix, command, "bigint", byPosition, (sb, i) => sb.Append(i.ToString(CultureInfo.InvariantCulture)));
+
                 case IEnumerable<short> l:
                     return TryStringSplit(ref l, splitAt, namePrefix, command, "smallint", byPosition, (sb, i) => sb.Append(i.ToString(CultureInfo.InvariantCulture)));
+
                 case IEnumerable<byte> l:
                     return TryStringSplit(ref l, splitAt, namePrefix, command, "tinyint", byPosition, (sb, i) => sb.Append(i.ToString(CultureInfo.InvariantCulture)));
             }
@@ -2273,28 +2299,40 @@ namespace Dapper
 #endif
                     case TypeCode.Boolean:
                         return ((bool)value) ? "1" : "0";
+
                     case TypeCode.Byte:
                         return ((byte)value).ToString(CultureInfo.InvariantCulture);
+
                     case TypeCode.SByte:
                         return ((sbyte)value).ToString(CultureInfo.InvariantCulture);
+
                     case TypeCode.UInt16:
                         return ((ushort)value).ToString(CultureInfo.InvariantCulture);
+
                     case TypeCode.Int16:
                         return ((short)value).ToString(CultureInfo.InvariantCulture);
+
                     case TypeCode.UInt32:
                         return ((uint)value).ToString(CultureInfo.InvariantCulture);
+
                     case TypeCode.Int32:
                         return ((int)value).ToString(CultureInfo.InvariantCulture);
+
                     case TypeCode.UInt64:
                         return ((ulong)value).ToString(CultureInfo.InvariantCulture);
+
                     case TypeCode.Int64:
                         return ((long)value).ToString(CultureInfo.InvariantCulture);
+
                     case TypeCode.Single:
                         return ((float)value).ToString(CultureInfo.InvariantCulture);
+
                     case TypeCode.Double:
                         return ((double)value).ToString(CultureInfo.InvariantCulture);
+
                     case TypeCode.Decimal:
                         return ((decimal)value).ToString(CultureInfo.InvariantCulture);
+
                     default:
                         var multiExec = GetMultiExec(value);
                         if (multiExec != null)
@@ -2751,6 +2789,7 @@ namespace Dapper
                                 il.Emit(OpCodes.Ldstr, "1");
                                 il.MarkLabel(allDone);
                                 break;
+
                             case TypeCode.Byte:
                             case TypeCode.SByte:
                             case TypeCode.UInt16:
@@ -2787,6 +2826,7 @@ namespace Dapper
                                 il.EmitCall(OpCodes.Call, InvariantCulture, null); // command, sql, ref-to-value, culture
                                 il.EmitCall(OpCodes.Call, convert, null); // command, sql, string value
                                 break;
+
                             default:
                                 if (propType.IsValueType()) il.Emit(OpCodes.Box, propType); // command, sql, object value
                                 il.EmitCall(OpCodes.Call, format, null); // command, sql, string value
@@ -3651,6 +3691,7 @@ namespace Dapper
         private static IEqualityComparer<string> connectionStringComparer = StringComparer.Ordinal;
 
 #if !NETSTANDARD1_3
+
         /// <summary>
         /// Key used to indicate the type name associated with a DataTable.
         /// </summary>
@@ -3686,6 +3727,7 @@ namespace Dapper
         /// <param name="table">The <see cref="DataTable"/> that has a type name associated with it.</param>
         public static string GetTypeName(this DataTable table) =>
             table?.ExtendedProperties[DataTableTypeNameKey] as string;
+
 #endif
 
         /// <summary>
@@ -3699,6 +3741,7 @@ namespace Dapper
         // one per thread
         [ThreadStatic]
         private static StringBuilder perThreadStringBuilderCache;
+
         private static StringBuilder GetStringBuilder()
         {
             var tmp = perThreadStringBuilderCache;
