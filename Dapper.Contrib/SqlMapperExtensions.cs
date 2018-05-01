@@ -8,6 +8,7 @@ using System.Collections.Concurrent;
 using System.Reflection.Emit;
 
 using Dapper;
+using System.Diagnostics;
 
 #if NETSTANDARD1_3
 using DataException = System.InvalidOperationException;
@@ -193,7 +194,13 @@ namespace Dapper.Contrib.Extensions
                 sb.Append(" = @id");
                 sql = sb.ToString();
                 GetQueries[type.TypeHandle] = sql;
+
+                Debug.WriteLine($"name to to: {key.Name}");
+                Console.WriteLine($"name to to: {key.Name}");
             }
+
+            Debug.WriteLine($"Sql to: {sql}");
+            Console.WriteLine($"Sql to: {sql}");
 
             var dynParms = new DynamicParameters();
             dynParms.Add("@id", id);
