@@ -180,18 +180,16 @@ namespace Dapper.Contrib.Extensions
         public static T Get<T>(this IDbConnection connection, dynamic id, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
         {
             var type = typeof(T);
+            var adapter = GetFormatter(connection);
 
             if (!GetQueries.TryGetValue(type.TypeHandle, out string sql))
             {
                 var key = GetSingleKey<T>(nameof(Get));
                 var name = GetTableName(type);
 
-                var adapter = GetFormatter(connection);
-
                 var sb = new StringBuilder();
                 sb.AppendFormat("select * from {0} where ", name);
-                adapter.AppendColumnName(sb, key.Name);
-                sb.Append(" = @id");
+                adapter.AppendColumnNameEqualsValue(sb, key.Name);
                 sql = sb.ToString();
                 GetQueries[type.TypeHandle] = sql;
 
@@ -203,7 +201,7 @@ namespace Dapper.Contrib.Extensions
             Console.WriteLine($"Sql to: {sql}");
 
             var dynParms = new DynamicParameters();
-            dynParms.Add("@id", id);
+            dynParms.Add("@Id", id);
 
             T obj;
 
