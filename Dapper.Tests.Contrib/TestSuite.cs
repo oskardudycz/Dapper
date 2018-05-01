@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 
 using Dapper.Contrib.Extensions;
@@ -584,7 +585,8 @@ namespace Dapper.Tests.Contrib
             {
                 var id1 = connection.Insert(new NullableDate { DateValue = new DateTime(2011, 07, 14) });
                 var id2 = connection.Insert(new NullableDate { DateValue = null });
-
+                Debug.WriteLine($"id1 = {id1}, id2= {id2}");
+                Console.WriteLine($"id1 = {id1}, id2= {id2}");
                 var value1 = connection.Get<INullableDate>(id1);
                 Assert.Equal(new DateTime(2011, 07, 14), value1.DateValue.Value);
 
