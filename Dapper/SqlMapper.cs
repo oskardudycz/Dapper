@@ -1056,6 +1056,8 @@ namespace Dapper
         {
             try
             {
+                Debug.WriteLine("3cooommand text: " + cmd.CommandText);
+                Console.WriteLine("3cooommand text: " + cmd.CommandText);
                 return cmd.ExecuteReader(GetBehavior(wasClosed, behavior));
             }
             catch (ArgumentException ex)
@@ -1073,8 +1075,6 @@ namespace Dapper
         {
             object param = command.Parameters;
             var identity = new Identity(command.CommandText, command.CommandType, cnn, effectiveType, param?.GetType(), null);
-            Debug.WriteLine("cooommand text: " + command.CommandText);
-            Console.WriteLine("cooommand text: " + command.CommandText);
 
             var info = GetCacheInfo(identity, param, command.AddToCache);
 
@@ -1085,8 +1085,6 @@ namespace Dapper
             try
             {
                 cmd = command.SetupCommand(cnn, info.ParamReader);
-                Debug.WriteLine("2cooommand text: " + cmd.CommandText);
-                Console.WriteLine("2cooommand text: " + cmd.CommandText);
 
                 if (wasClosed) cnn.Open();
                 reader = ExecuteReaderWithFlagsFallback(cmd, wasClosed, CommandBehavior.SequentialAccess | CommandBehavior.SingleResult);

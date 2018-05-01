@@ -34,14 +34,13 @@ namespace Dapper.Contrib.Extensions
 
                 var sb = new StringBuilder();
                 sb.AppendFormat("select * from {0} where ", name);
-                adapter.AppendColumnName(sb, key.Name);
-                sb.Append(" = @id");
+                adapter.AppendColumnNameEqualsValue(sb, key.Name);
                 sql = sb.ToString();
                 GetQueries[type.TypeHandle] = sql;
             }
 
             var dynParms = new DynamicParameters();
-            dynParms.Add("@id", id);
+            dynParms.Add("@Id", id);
 
             if (!type.IsInterface())
                 return (await connection.QueryAsync<T>(sql, dynParms, transaction, commandTimeout).ConfigureAwait(false)).FirstOrDefault();
